@@ -22,7 +22,7 @@ const sensors = [
   { name: "Cloud", ok: true },
 ];
 
-export default function LivePage() {
+function LivePage() {
   return (
     <AppLayout title="Live Monitoring" subtitle="Live camera feed & real-time detection">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">

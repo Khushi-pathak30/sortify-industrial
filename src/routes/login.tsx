@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { Eye, EyeOff, Recycle, Cpu, Cloud, Zap, Server } from "lucide-react";
+import { api, setToken } from "@/lib/api";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -14,6 +15,35 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const [show, setShow] = useState(false);
+  const [email, setEmail] = useState("admin@sortify.com");
+  const [password, setPassword] = useState("password");
+  const [role, setRole] = useState("Administrator");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await api<{ success: boolean; token: string }>("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password, role }),
+      });
+      if (res.success && res.token) {
+        setToken(res.token);
+        router.navigate({ to: "/" });
+      } else {
+        setError("Invalid response from server.");
+      }
+    } catch (err: any) {
+      setError(err.message || "Invalid credentials.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen w-full bg-[#0B1120] text-white flex flex-col md:flex-row">
       {/* Left */}
@@ -63,14 +93,33 @@ function LoginPage() {
           <h2 className="text-2xl font-semibold tracking-tight">Sign in</h2>
           <p className="text-sm text-white/50 mt-1">Access your control dashboard</p>
 
-          <form className="mt-8 space-y-5" onSubmit={(e) => e.preventDefault()}>
+          <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+            {error && (
+              <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-400">
+                {error}
+              </div>
+            )}
             <Field label="Email">
-              <input type="email" placeholder="you@company.com" className={inputCls} />
+              <input 
+                type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@company.com" 
+                className={inputCls} 
+                required
+              />
             </Field>
 
             <Field label="Password">
               <div className="relative">
-                <input type={show ? "text" : "password"} placeholder="••••••••" className={inputCls + " pr-10"} />
+                <input 
+                  type={show ? "text" : "password"} 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••" 
+                  className={inputCls + " pr-10"} 
+                  required
+                />
                 <button type="button" onClick={() => setShow(!show)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/80">
                   {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -78,7 +127,11 @@ function LoginPage() {
             </Field>
 
             <Field label="Role">
-              <select className={inputCls}>
+              <select 
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className={inputCls}
+              >
                 <option className="bg-[#0B1120]">Administrator</option>
                 <option className="bg-[#0B1120]">Supervisor</option>
                 <option className="bg-[#0B1120]">Operator</option>
@@ -94,12 +147,13 @@ function LoginPage() {
               <a href="#" className="text-[#00E5FF] hover:underline">Forgot password?</a>
             </div>
 
-            <Link
-              to="/"
-              className="mt-2 flex items-center justify-center w-full rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#00E5FF] px-5 py-3 text-sm font-medium text-white shadow-lg shadow-[#3B82F6]/20 hover:opacity-90 transition"
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-2 flex items-center justify-center w-full rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#00E5FF] px-5 py-3 text-sm font-medium text-white shadow-lg shadow-[#3B82F6]/20 hover:opacity-90 transition disabled:opacity-50"
             >
-              Login
-            </Link>
+              {loading ? "Signing in..." : "Login"}
+            </button>
           </form>
 
           <div className="mt-8 text-center text-[11px] text-white/40">v1.0 · SORTIFY AI</div>

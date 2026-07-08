@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { LayoutDashboard, Radio, BarChart3, FileText, Settings, LogOut, Recycle } from "lucide-react";
+import { setToken } from "@/lib/api";
 
 const items = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
@@ -49,6 +50,7 @@ export function AppSidebar() {
       <div className="p-3 border-t border-white/5">
         <Link
           to="/login"
+          onClick={() => setToken(null)}
           className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/60 hover:text-white hover:bg-white/5 transition-colors"
         >
           <LogOut className="h-4 w-4" />

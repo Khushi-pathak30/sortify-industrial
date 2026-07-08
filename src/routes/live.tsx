@@ -123,12 +123,3 @@ function Row({ label, value, accent }: { label: string; value: string; accent?: 
     </div>
   );
 }
-
-function Row({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
-  return (
-    <div className="flex justify-between text-sm">
-      <span className="text-white/50">{label}</span>
-      <span className={accent ? "text-[#00E5FF] font-medium" : "text-white"}>{value}</span>
-    </div>
-  );
-}

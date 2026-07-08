@@ -5,14 +5,6 @@ import { Trash2, Cog, Droplets, Wind } from "lucide-react";
 import {
   PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
 } from "recharts";
-
-import { createFileRoute } from "@tanstack/react-router";
-import { AppLayout, Panel } from "@/components/app-layout";
-import { kpi, distribution, moistureTrend, systemHealth, recentRecords } from "@/lib/mock-data";
-import { Trash2, Cog, Droplets, Wind } from "lucide-react";
-import {
-  PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
-} from "recharts";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 

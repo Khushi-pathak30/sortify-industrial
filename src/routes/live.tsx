@@ -63,7 +63,7 @@ function LivePage() {
       clearInterval(tId);
       clearInterval(eId);
     };
-  }, []);
+  }, [token]);
 
   const sensors = [
     { name: "ESP32", ok: !!telemetry },

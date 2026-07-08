@@ -83,7 +83,7 @@ function Dashboard() {
       active = false;
       clearInterval(id);
     };
-  }, []);
+  }, [token]);
 
   const totalWaste = data ? `${data.kpi.total} kg` : `${kpi.total} kg`;
   const metalWaste = data ? `${data.kpi.metal} kg` : `${kpi.metal} kg`;

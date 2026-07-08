@@ -34,7 +34,10 @@ export async function api<T = unknown>(
   const token = getToken();
   if (token) headers.set("Authorization", `Bearer ${token}`);
 
-  const res = await fetch(`${API_BASE_URL}${path}`, { ...init, headers });
+  const separator = path.includes("?") ? "&" : "?";
+  const url = `${API_BASE_URL}${path}${separator}_t=${Date.now()}`;
+
+  const res = await fetch(url, { ...init, headers });
   const text = await res.text();
   const body = text ? JSON.parse(text) : null;
 

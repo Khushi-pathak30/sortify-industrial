@@ -88,9 +88,23 @@ function LivePage() {
           </div>
         }>
           <div className="relative aspect-video overflow-hidden rounded-xl border border-white/10 bg-black">
-            <div className="absolute inset-0 flex items-center justify-center text-white/30">
-              <Video className="h-16 w-16" />
-            </div>
+            {/* Dynamic camera feed placeholder image based on current waste type */}
+            <img 
+              src={(() => {
+                if (!lastEvent || !telemetry) return "/waste_empty.jpg";
+                const type = lastEvent.waste?.toLowerCase() ?? "";
+                if (type.includes("metal")) return "/waste_metal.jpg";
+                if (type.includes("organic") || type.includes("wet")) return "/waste_organic.jpg";
+                if (type.includes("plastic") || type.includes("paper") || type.includes("e-waste")) return "/waste_plastic.jpg";
+                if (type.includes("glass") || type.includes("cardboard")) return "/waste_glass.jpg";
+                return "/waste_empty.jpg";
+              })()} 
+              alt="Live feed scan camera" 
+              className="absolute inset-0 h-full w-full object-cover opacity-85 transition-opacity duration-300"
+            />
+            {/* Pulsating scanning laser laser line */}
+            <div className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent animate-pulse" style={{ top: "35%", boxShadow: "0 0 8px #00E5FF" }} />
+
             <div className="absolute top-3 left-3 flex items-center gap-2 rounded-md bg-black/60 px-2 py-1 text-[11px] text-white/80">
               <Camera className="h-3 w-3" /> {telemetry?.device ?? "ESP32-CAM"} · 1080p
             </div>

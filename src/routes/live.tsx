@@ -15,10 +15,12 @@ export const Route = createFileRoute("/live")({
 });
 
 function LivePage() {
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const token = getToken();
 
   useEffect(() => {
+    setMounted(true);
     if (!token) {
       router.navigate({ to: "/login" });
     }
@@ -73,7 +75,7 @@ function LivePage() {
     { name: "AWS Cloud", ok: telemetry?.cloudConnected },
   ];
 
-  if (!token) {
+  if (!mounted || !token) {
     return null;
   }
 

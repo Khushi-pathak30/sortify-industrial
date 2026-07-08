@@ -19,10 +19,12 @@ export const Route = createFileRoute("/")({
 });
 
 function Dashboard() {
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const token = getToken();
 
   useEffect(() => {
+    setMounted(true);
     if (!token) {
       router.navigate({ to: "/login" });
     }
@@ -99,7 +101,7 @@ function Dashboard() {
   const healthData = data ? data.health : systemHealth;
   const recentRecordsData = data ? data.recent : recentRecords.slice(0, 7);
 
-  if (!token) {
+  if (!mounted || !token) {
     return null;
   }
 

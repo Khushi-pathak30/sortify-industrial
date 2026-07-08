@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { AppLayout, Panel } from "@/components/app-layout";
 import { Camera, Video } from "lucide-react";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api, getToken } from "@/lib/api";
 
 export const Route = createFileRoute("/live")({
   head: () => ({
@@ -15,10 +15,20 @@ export const Route = createFileRoute("/live")({
 });
 
 function LivePage() {
+  const router = useRouter();
+  const token = getToken();
+
+  useEffect(() => {
+    if (!token) {
+      router.navigate({ to: "/login" });
+    }
+  }, [token, router]);
+
   const [telemetry, setTelemetry] = useState<any>(null);
   const [lastEvent, setLastEvent] = useState<any>(null);
 
   useEffect(() => {
+    if (!token) return;
     let active = true;
     const fetchTelemetry = async () => {
       try {
@@ -62,6 +72,10 @@ function LivePage() {
     { name: "Servo", ok: !!telemetry },
     { name: "AWS Cloud", ok: telemetry?.cloudConnected },
   ];
+
+  if (!token) {
+    return null;
+  }
 
   return (
     <AppLayout title="Live Monitoring" subtitle="Live camera feed & real-time detection">

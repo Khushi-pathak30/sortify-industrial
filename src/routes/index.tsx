@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { AppLayout, Panel } from "@/components/app-layout";
 import { kpi, distribution, moistureTrend, systemHealth, recentRecords } from "@/lib/mock-data";
 import { Trash2, Cog, Droplets, Wind } from "lucide-react";
@@ -6,7 +6,7 @@ import {
   PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
 } from "recharts";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api, getToken } from "@/lib/api";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -19,6 +19,15 @@ export const Route = createFileRoute("/")({
 });
 
 function Dashboard() {
+  const router = useRouter();
+  const token = getToken();
+
+  useEffect(() => {
+    if (!token) {
+      router.navigate({ to: "/login" });
+    }
+  }, [token, router]);
+
   const [data, setData] = useState<{
     kpi: { total: number; metal: number; wet: number; dry: number };
     recent: any[];
@@ -26,6 +35,7 @@ function Dashboard() {
   } | null>(null);
 
   useEffect(() => {
+    if (!token) return;
     let active = true;
     const load = async () => {
       try {
@@ -88,6 +98,10 @@ function Dashboard() {
 
   const healthData = data ? data.health : systemHealth;
   const recentRecordsData = data ? data.recent : recentRecords.slice(0, 7);
+
+  if (!token) {
+    return null;
+  }
 
   return (
     <AppLayout title="Dashboard" subtitle="Real-time overview of segregation activity">

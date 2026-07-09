@@ -1,10 +1,10 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Radio, BarChart3, FileText, Settings, LogOut, Recycle } from "lucide-react";
+import { LayoutDashboard, AlertTriangle, BarChart3, FileText, Settings, LogOut, Recycle } from "lucide-react";
 import { setToken } from "@/lib/api";
 
 const items = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Live Monitoring", url: "/live", icon: Radio },
+  { title: "System Alerts", url: "/live", icon: AlertTriangle },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
   { title: "Reports", url: "/reports", icon: FileText },
   { title: "Settings", url: "/settings", icon: Settings },

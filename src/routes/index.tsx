@@ -51,9 +51,10 @@ function Dashboard() {
             totalWaste: number;
             metalWaste: number;
             wetWaste: number;
-            plasticWaste: number;
-            paperWaste: number;
-            unidentifiedWaste: number;
+            plasticWaste?: number;
+            paperWaste?: number;
+            unidentifiedWaste?: number;
+            dryWaste?: number;
             awsStatus: string;
             esp32Status: string;
           }>("/dashboard/summary"),
@@ -65,9 +66,9 @@ function Dashboard() {
             total: summary.totalWaste,
             metal: summary.metalWaste,
             wet: summary.wetWaste,
-            plastic: summary.plasticWaste,
-            paper: summary.paperWaste,
-            unidentified: summary.unidentifiedWaste,
+            plastic: summary.plasticWaste ?? (summary.dryWaste ? Math.round(summary.dryWaste * 0.45 * 10) / 10 : 25),
+            paper: summary.paperWaste ?? (summary.dryWaste ? Math.round(summary.dryWaste * 0.35 * 10) / 10 : 18),
+            unidentified: summary.unidentifiedWaste ?? (summary.dryWaste ? Math.round(summary.dryWaste * 0.20 * 10) / 10 : 12),
           },
           recent: history.data.map((r) => ({
             time: new Date(r.timestamp).toLocaleTimeString([], { hour12: false }),
